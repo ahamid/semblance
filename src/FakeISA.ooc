@@ -1,12 +1,13 @@
 import ISA
 import Datum
+import structs/ArrayList
 
 FakeISA: class extends ISA {
   name: func -> String {
     return "fake"
   }
-  registers: func -> Register[] {
-    return null //[] as Register[]
+  registers: func -> ArrayList<Register> {
+    return ArrayList<Register> new()
   }
   push: func(datum: Datum) {
   }

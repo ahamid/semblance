@@ -1,4 +1,5 @@
 import Datum
+import structs/ArrayList
 
 Register: class {
   name: String
@@ -7,7 +8,7 @@ Register: class {
 
 ISA: abstract class {
   name: abstract func -> String
-  registers: abstract func -> Register[]
+  registers: abstract func -> ArrayList<Register>
   push: abstract func(datum: Datum)
   pop: abstract func(size: Int, reg: Register) -> Datum
 }
