@@ -6,8 +6,8 @@ FakeISA: class extends ISA {
   name: func -> String {
     return "fake"
   }
-  registers: func -> ArrayList<Register> {
-    return ArrayList<Register> new()
+  registers: func -> Register[] {
+    return [] as Register[]
   }
   push: func(datum: Datum) {
   }

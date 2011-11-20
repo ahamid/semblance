@@ -8,7 +8,7 @@ Register: class {
 
 ISA: abstract class {
   name: abstract func -> String
-  registers: abstract func -> ArrayList<Register>
+  registers: abstract func -> Register[]
   push: abstract func(datum: Datum)
   pop: abstract func(size: Int, reg: Register) -> Datum
 }
