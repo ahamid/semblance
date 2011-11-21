@@ -1,5 +1,5 @@
 import ISA
-import Datum
+import Data
 import structs/ArrayList
 
 FakeISA: class extends ISA {
@@ -9,8 +9,9 @@ FakeISA: class extends ISA {
   registers: func -> ArrayList<Register> {
     return ArrayList<Register> new()
   }
-  push: func(datum: Datum) {
+  push: func(data: Data) {
   }
-  pop: func(size: Int, reg: Register) {
+  pop: func(size: Int, reg: Register) -> Data {
+    return null
   }
 }

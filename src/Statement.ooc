@@ -1,7 +1,9 @@
 import Instruction
-import DataSource
+import Data
 
 Statement: class {
   ins: Instruction
-  args: Iterable<DataSource>
+  args: Iterable<Data>
+
+  init: func (=ins) {}
 }
