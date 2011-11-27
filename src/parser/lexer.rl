@@ -1,3 +1,4 @@
+#include "SemblanceConfig.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +25,7 @@
     identifier { print_match("identifier", lineno, ts, te); };
     directive  { print_match("directive", lineno, ts, te); };
     newline;
+    comma;
     space;
   *|;
 }%%
