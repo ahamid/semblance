@@ -6,10 +6,6 @@
 
 %token_type { Token* }
 %token_destructor { token_free($$); }
-%default_type { Token * }
-%type directive { Token * }
-%type IDENT { Token * }
-%type statement { Token * }
 
 %token_prefix TK_
 

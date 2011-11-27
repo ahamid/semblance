@@ -1,2 +1,2 @@
-#define TK_IDENT                           1
-#define TK_DIRECTIVE_START                 2
+#define TK_DIRECTIVE_START                 1
+#define TK_IDENT                           2

@@ -66,7 +66,6 @@
 typedef union {
   int yyinit;
   ParseTOKENTYPE yy0;
-  Token * yy16;
 } YYMINORTYPE;
 #ifndef YYSTACKDEPTH
 #define YYSTACKDEPTH 100
@@ -145,26 +144,28 @@ static const YYMINORTYPE yyzerominor = { 0 };
 **                     shifting non-terminals after a reduce.
 **  yy_default[]       Default action for each state.
 */
-#define YY_ACTTAB_COUNT (9)
+#define YY_ACTTAB_COUNT (11)
 static const YYACTIONTYPE yy_action[] = {
- /*     0 */     8,    6,    5,   16,    1,    4,    2,    7,    3,
+ /*     0 */     8,    4,    6,    2,    5,   16,    1,    3,   17,   17,
+ /*    10 */     7,
 };
 static const YYCODETYPE yy_lookahead[] = {
- /*     0 */     0,    1,    4,    6,    7,    1,    8,    5,    2,
+ /*     0 */     0,    2,    2,    6,    7,    4,    5,    1,    9,    9,
+ /*    10 */     8,
 };
-#define YY_SHIFT_USE_DFLT (-1)
+#define YY_SHIFT_USE_DFLT (-2)
 #define YY_SHIFT_COUNT (3)
-#define YY_SHIFT_MIN   (0)
+#define YY_SHIFT_MIN   (-1)
 #define YY_SHIFT_MAX   (6)
 static const signed char yy_shift_ofst[] = {
- /*     0 */    -1,    6,    0,    4,
+ /*     0 */    -2,    6,    0,   -1,
 };
 #define YY_REDUCE_USE_DFLT (-4)
 #define YY_REDUCE_COUNT (2)
 #define YY_REDUCE_MIN   (-3)
 #define YY_REDUCE_MAX   (2)
 static const signed char yy_reduce_ofst[] = {
- /*     0 */    -3,   -2,    2,
+ /*     0 */     1,   -3,    2,
 };
 static const YYACTIONTYPE yy_default[] = {
  /*     0 */    10,   13,   15,   15,   11,    9,   14,   12,
@@ -260,9 +261,9 @@ void ParseTrace(FILE *TraceFILE, char *zTracePrompt){
 /* For tracing shifts, the names of all terminals and nonterminals
 ** are required.  The following table supplies these names */
 static const char *const yyTokenName[] = { 
-  "$",             "IDENT",         "DIRECTIVE_START",  "error",       
-  "directive",     "statement",     "module",        "directives",  
-  "statements",  
+  "$",             "DIRECTIVE_START",  "IDENT",         "error",       
+  "module",        "directives",    "statements",    "directive",   
+  "statement",   
 };
 #endif /* NDEBUG */
 
@@ -356,12 +357,12 @@ static void yy_destructor(
     ** inside the C code.
     */
       /* TERMINAL Destructor */
-    case 1: /* IDENT */
-    case 2: /* DIRECTIVE_START */
+    case 1: /* DIRECTIVE_START */
+    case 2: /* IDENT */
 {
 #line 8 "/home/aaron/workspace/semblance/src/parser/grammar.y"
  token_free((yypminor->yy0)); 
-#line 365 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 366 "/home/aaron/workspace/semblance/src/parser/grammar.c"
 }
       break;
     default:  break;   /* If no destructor action specified: do nothing */
@@ -599,13 +600,13 @@ static const struct {
   YYCODETYPE lhs;         /* Symbol on the left-hand side of the rule */
   unsigned char nrhs;     /* Number of right-hand side symbols in the rule */
 } yyRuleInfo[] = {
-  { 6, 2 },
-  { 7, 2 },
-  { 7, 0 },
   { 4, 2 },
-  { 8, 2 },
-  { 8, 0 },
-  { 5, 1 },
+  { 5, 2 },
+  { 5, 0 },
+  { 7, 2 },
+  { 6, 2 },
+  { 6, 0 },
+  { 8, 1 },
 };
 
 static void yy_accept(yyParser*);  /* Forward Declaration */
@@ -661,15 +662,15 @@ static void yy_reduce(
   **     break;
   */
       case 3: /* directive ::= DIRECTIVE_START IDENT */
-#line 42 "/home/aaron/workspace/semblance/src/parser/grammar.y"
-{ printf("directive: %s\n", yymsp[0].minor.yy0->value); token_free(yymsp[0].minor.yy0);   yy_destructor(yypParser,2,&yymsp[-1].minor);
+#line 38 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("directive: %s\n", yymsp[0].minor.yy0->value); token_free(yymsp[0].minor.yy0);   yy_destructor(yypParser,1,&yymsp[-1].minor);
 }
-#line 668 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 669 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       case 6: /* statement ::= IDENT */
-#line 47 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 43 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 { printf("statement: %s\n", yymsp[0].minor.yy0->value); token_free(yymsp[0].minor.yy0); }
-#line 673 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 674 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       default:
       /* (0) module ::= directives statements */ yytestcase(yyruleno==0);
@@ -722,10 +723,10 @@ static void yy_parse_failed(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser fails */
-#line 20 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 16 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   fprintf(stderr, "Parsing failed.\n");
-#line 729 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 730 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 #endif /* YYNOERRORRECOVERY */
@@ -740,7 +741,7 @@ static void yy_syntax_error(
 ){
   ParseARG_FETCH;
 #define TOKEN (yyminor.yy0)
-#line 24 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 20 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   printf("error at token %s\n", yyTokenName[yymajor]);
 
@@ -752,7 +753,7 @@ static void yy_syntax_error(
          yyTokenName[yymajor],
          yymajor != 0 ? strlen(TOKEN->value) : 7, 
          yymajor != 0 ? TOKEN->value : "$ (EOF)");
-#line 756 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 757 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
@@ -771,10 +772,10 @@ static void yy_accept(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser accepts */
-#line 16 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 12 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   printf("Parsing complete.\n");
-#line 778 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 779 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
