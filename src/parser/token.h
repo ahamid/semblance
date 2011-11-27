@@ -3,7 +3,7 @@
 
 typedef enum {
   IDENTIFIER,
-  DIRECTIVE
+  DIRECTIVE_START
 } Token;
 
 #endif

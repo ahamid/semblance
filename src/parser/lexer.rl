@@ -1,7 +1,9 @@
-#include "SemblanceConfig.h"
+#include "grammar.h"
+#include "lexer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gc/gc.h>
 
 %%{
   machine semblance_lexer;
@@ -17,13 +19,14 @@
   alpha_u = alpha | '_';
   identifier = alpha_u alnum_u*;
   register = '%' identifier;
-  directive = '!' identifier when starts_line;
+  #directive = '!' identifier when starts_line;
+  directive_start = '!' when starts_line;
   comma = ',';
   newline = '\n' @newline;
 
   main := |*
-    identifier { print_match("identifier", lineno, ts, te); };
-    directive  { print_match("directive", lineno, ts, te); };
+    identifier { print_match("identifier", lineno, ts, te); IDENT(); };
+    directive_start  { print_match("directive", lineno, ts, te); DIRECTIVE_START(); };
     newline;
     comma;
     space;
@@ -43,16 +46,24 @@ int parse(const char * const source) {
   const char * p = &source[0];
   printf("source %i chars: '%s'\n", strlen(source), source);
 
-  %% write init;
+  void *pParser = ParseAlloc(malloc);
+
+    %% write init;
 
   const char * pe = source + strlen(source);
   const char * eof = pe;
   
-  %% write exec;
+    %% write exec;
 
+  int error = 0;
   if (cs == semblance_lexer_error) {
     printf("invalid character '%c'\n", ts[0]);
-    return 1;
+    error = 1;
+  } else {
+    Parse(pParser, 0, NULL);
   }
-  return 0;
+
+  ParseFree(pParser, free);
+
+  return error;
 }

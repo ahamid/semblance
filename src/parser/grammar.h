@@ -1,3 +1,2 @@
-#define EXCLAMATION                     1
-#define IDENT                           2
-#define IDENTI                          3
+#define TK_DIRECTIVE_START                 1
+#define TK_IDENT                           2
