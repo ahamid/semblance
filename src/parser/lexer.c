@@ -9,8 +9,12 @@
 #line 31 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
 
+static void print_match(const char const * type, int line, const char const * start, const char const * end) {
+  printf("line %i, type %s, len: %i: '%.*s'\n", line, type, end - start, end - start, start);
+}
 
-#line 14 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+
+#line 18 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 static const char _semblance_lexer_actions[] = {
 	0, 1, 1, 1, 2, 1, 4, 1, 
 	5, 1, 6, 1, 7, 2, 0, 3
@@ -92,22 +96,17 @@ static const int semblance_lexer_error = 0;
 static const int semblance_lexer_en_main = 2;
 
 
-#line 34 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 38 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
-static void print_match(const char const * type, int line, const char const * start, const char const * end) {
-  printf("line %i, type %s, len: %i: '%.*s'\n", line, type, end - start, end - start, start);
-}
-
-int main(int argc, const char const * const * argv) {
+int parse(const char * const source) {
   int cs, act, lineno = 0;
   const char *ts = 0, *te = 0;
 
-  const char * const source = argv[1];
   const char * p = &source[0];
   printf("source %i chars: '%s'\n", strlen(source), source);
 
   
-#line 111 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 110 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 	{
 	cs = semblance_lexer_start;
 	ts = 0;
@@ -115,13 +114,13 @@ int main(int argc, const char const * const * argv) {
 	act = 0;
 	}
 
-#line 48 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 47 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
   const char * pe = source + strlen(source);
   const char * eof = pe;
   
   
-#line 125 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 124 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -143,7 +142,7 @@ _resume:
 #line 1 "NONE"
 	{ts = p;}
 	break;
-#line 147 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 146 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -268,7 +267,7 @@ _eof_trans:
 #line 26 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p;p--;{ print_match("directive", lineno, ts, te); }}
 	break;
-#line 272 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 271 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -281,7 +280,7 @@ _again:
 #line 1 "NONE"
 	{ts = 0;}
 	break;
-#line 285 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 284 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -301,9 +300,11 @@ _again:
 	_out: {}
 	}
 
-#line 53 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 52 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
   if (cs == semblance_lexer_error) {
     printf("invalid character '%c'\n", ts[0]);
+    return 1;
   }
+  return 0;
 }

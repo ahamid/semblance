@@ -30,17 +30,16 @@
   *|;
 }%%
 
-%% write data;
-
 static void print_match(const char const * type, int line, const char const * start, const char const * end) {
   printf("line %i, type %s, len: %i: '%.*s'\n", line, type, end - start, end - start, start);
 }
 
-int main(int argc, const char const * const * argv) {
+%% write data;
+
+int parse(const char * const source) {
   int cs, act, lineno = 0;
   const char *ts = 0, *te = 0;
 
-  const char * const source = argv[1];
   const char * p = &source[0];
   printf("source %i chars: '%s'\n", strlen(source), source);
 
@@ -53,5 +52,7 @@ int main(int argc, const char const * const * argv) {
 
   if (cs == semblance_lexer_error) {
     printf("invalid character '%c'\n", ts[0]);
+    return 1;
   }
+  return 0;
 }
