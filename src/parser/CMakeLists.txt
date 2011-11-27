@@ -20,6 +20,7 @@ add_custom_command(
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/grammar.y
 )
 
+add_definitions(-g -O0)
 # add the executable
 #add_executable(Semblance semblance.cxx)
 add_library(parser STATIC ${GRAMMAR_C} ${LEXER_C} token.c)

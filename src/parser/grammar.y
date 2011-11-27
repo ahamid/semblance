@@ -6,6 +6,10 @@
 
 %token_type { Token* }
 %token_destructor { token_free($$); }
+%default_type { Token * }
+%type directive { Token * }
+%type IDENT { Token * }
+%type statement { Token * }
 
 %token_prefix TK_
 
@@ -35,10 +39,9 @@ module ::= directives statements.
 directives ::= directives directive.
 directives ::= .
 
-directive ::= DIRECTIVE_START IDENT(I). { printf("directive: %s\n", I->value); }
+directive ::= DIRECTIVE_START IDENT(I). { printf("directive: %s\n", I->value); token_free(I); }
 
 statements ::= statements statement.
 statements ::= .
 
-statement ::= IDENT(I). { printf("statement: %s\n", I->value); }
-
+statement ::= IDENT(I). { printf("statement: %s\n", I->value); token_free(I); }
