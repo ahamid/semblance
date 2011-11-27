@@ -22,6 +22,6 @@ add_custom_command(
 
 # add the executable
 #add_executable(Semblance semblance.cxx)
-add_library(parser STATIC ${GRAMMAR_C} ${LEXER_C})
+add_library(parser STATIC ${GRAMMAR_C} ${LEXER_C} token.c)
 add_executable(main main.c)
 target_link_libraries(main parser)

@@ -8,7 +8,8 @@
 
   #include "SemblanceConfig.h"
   #include "token.h"
-#line 12 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+  #include <string.h>
+#line 13 "/home/aaron/workspace/semblance/src/parser/grammar.c"
 /* Next is all token values, in a form suitable for use by makeheaders.
 ** This section will be null unless lemon is run with the -m switch.
 */
@@ -61,7 +62,7 @@
 #define YYCODETYPE unsigned char
 #define YYNOCODE 10
 #define YYACTIONTYPE unsigned char
-#define ParseTOKENTYPE  Token 
+#define ParseTOKENTYPE  Token* 
 typedef union {
   int yyinit;
   ParseTOKENTYPE yy0;
@@ -355,6 +356,15 @@ static void yy_destructor(
     ** which appear on the RHS of the rule, but which are not used
     ** inside the C code.
     */
+      /* TERMINAL Destructor */
+    case 1: /* DIRECTIVE_START */
+    case 2: /* IDENT */
+{
+#line 8 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+ token_free((yypminor->yy0)); 
+#line 366 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+}
+      break;
     default:  break;   /* If no destructor action specified: do nothing */
   }
 }
@@ -652,14 +662,15 @@ static void yy_reduce(
   **     break;
   */
       case 3: /* directive ::= DIRECTIVE_START IDENT */
-#line 35 "/home/aaron/workspace/semblance/src/parser/grammar.y"
-{ printf("directive: %i\n", yymsp[0].minor.yy0); }
-#line 658 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 38 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("directive: %s\n", yymsp[0].minor.yy0->value);   yy_destructor(yypParser,1,&yymsp[-1].minor);
+}
+#line 669 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       case 6: /* statement ::= IDENT */
-#line 40 "/home/aaron/workspace/semblance/src/parser/grammar.y"
-{ printf("statement: %i\n", yymsp[0].minor.yy0); }
-#line 663 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 43 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("statement: %s\n", yymsp[0].minor.yy0->value); }
+#line 674 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       default:
       /* (0) module ::= directives statements */ yytestcase(yyruleno==0);
@@ -712,10 +723,10 @@ static void yy_parse_failed(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser fails */
-#line 13 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 16 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   fprintf(stderr, "Parsing failed.\n");
-#line 719 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 730 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 #endif /* YYNOERRORRECOVERY */
@@ -730,7 +741,7 @@ static void yy_syntax_error(
 ){
   ParseARG_FETCH;
 #define TOKEN (yyminor.yy0)
-#line 17 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 20 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   printf("error at token %s\n", yyTokenName[yymajor]);
 
@@ -739,10 +750,10 @@ static void yy_syntax_error(
     printf(" %s",yyTokenName[yypParser->yystack[i].major]);
 
   printf(" | %s ] unexpected '%.*s'\n",
-         yyTokenName[yymajor]);
-       //  yymajor != 0 ? TOKEN->len : 7, 
-       //  yymajor != 0 ? TOKEN->start : "$ (EOF)");
-#line 746 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+         yyTokenName[yymajor],
+         yymajor != 0 ? strlen(TOKEN->value) : 7, 
+         yymajor != 0 ? TOKEN->value : "$ (EOF)");
+#line 757 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
@@ -761,10 +772,10 @@ static void yy_accept(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser accepts */
-#line 9 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 12 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
-  printf("Parsing complete.");
-#line 768 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+  printf("Parsing complete.\n");
+#line 779 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 

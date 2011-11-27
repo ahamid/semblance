@@ -1,5 +1,8 @@
 #include "grammar.h"
 #include "lexer.h"
+// lemon doesn't provide prototypes for parser API, brute force include here
+// and let the compiler sort it out
+#include "grammar.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,7 +12,7 @@
   machine semblance_lexer;
 
   action starts_line {
-    ts == p || (*(ts - 1) == '\n')
+    ts == source || (*(ts - 1) == '\n')
   }
   action newline {
     lineno++;

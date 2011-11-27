@@ -1,9 +1,12 @@
 %include {
   #include "SemblanceConfig.h"
   #include "token.h"
+  #include <string.h>
 }
 
-%token_type { Token }
+%token_type { Token* }
+%token_destructor { token_free($$); }
+
 %token_prefix TK_
 
 %parse_accept {
@@ -22,9 +25,9 @@
     printf(" %s",yyTokenName[yypParser->yystack[i].major]);
 
   printf(" | %s ] unexpected '%.*s'\n",
-         yyTokenName[yymajor]);
-       //  yymajor != 0 ? TOKEN->len : 7, 
-       //  yymajor != 0 ? TOKEN->start : "$ (EOF)");
+         yyTokenName[yymajor],
+         yymajor != 0 ? strlen(TOKEN->value) : 7, 
+         yymajor != 0 ? TOKEN->value : "$ (EOF)");
 }
 
 module ::= directives statements.
@@ -32,10 +35,10 @@ module ::= directives statements.
 directives ::= directives directive.
 directives ::= .
 
-directive ::= DIRECTIVE_START IDENT(I). { printf("directive: %i\n", I); }
+directive ::= DIRECTIVE_START IDENT(I). { printf("directive: %s\n", I->value); }
 
 statements ::= statements statement.
 statements ::= .
 
-statement ::= IDENT(I). { printf("statement: %i\n", I); }
+statement ::= IDENT(I). { printf("statement: %s\n", I->value); }
 

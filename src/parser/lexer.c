@@ -2,13 +2,16 @@
 #line 1 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 #include "grammar.h"
 #include "lexer.h"
+// lemon doesn't provide prototypes for parser API, brute force include here
+// and let the compiler sort it out
+#include "grammar.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gc/gc.h>
 
 
-#line 34 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 37 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
 
 static void print_match(const char const * type, int line, const char const * start, const char const * end) {
@@ -16,7 +19,7 @@ static void print_match(const char const * type, int line, const char const * st
 }
 
 
-#line 20 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 23 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 static const char _semblance_lexer_actions[] = {
 	0, 1, 1, 1, 2, 1, 3, 1, 
 	5, 1, 6, 1, 7, 2, 0, 4
@@ -90,7 +93,7 @@ static const int semblance_lexer_error = 0;
 static const int semblance_lexer_en_main = 1;
 
 
-#line 41 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 44 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
 int parse(const char * const source) {
   int cs, act, lineno = 0;
@@ -102,7 +105,7 @@ int parse(const char * const source) {
   void *pParser = ParseAlloc(malloc);
 
     
-#line 106 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 109 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 	{
 	cs = semblance_lexer_start;
 	ts = 0;
@@ -110,13 +113,13 @@ int parse(const char * const source) {
 	act = 0;
 	}
 
-#line 52 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 55 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
   const char * pe = source + strlen(source);
   const char * eof = pe;
   
     
-#line 120 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 123 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -138,7 +141,7 @@ _resume:
 #line 1 "NONE"
 	{ts = p;}
 	break;
-#line 142 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 145 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -163,9 +166,9 @@ _resume:
 	case 0: {
 		_widec = (short)(128 + ((*p) - -128));
 		if ( 
-#line 11 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 14 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
-    ts == p || (*(ts - 1) == '\n')
+    ts == source || (*(ts - 1) == '\n')
    ) _widec += 256;
 		break;
 	}
@@ -237,32 +240,32 @@ _eof_trans:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 14 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 17 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{
     lineno++;
   }
 	break;
 	case 3:
-#line 29 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 32 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p+1;{ print_match("directive", lineno, ts, te); DIRECTIVE_START(); }}
 	break;
 	case 4:
-#line 30 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 33 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p+1;}
 	break;
 	case 5:
-#line 31 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 34 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p+1;}
 	break;
 	case 6:
-#line 32 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 35 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p+1;}
 	break;
 	case 7:
-#line 28 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 31 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 	{te = p;p--;{ print_match("identifier", lineno, ts, te); IDENT(); }}
 	break;
-#line 266 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 269 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -275,7 +278,7 @@ _again:
 #line 1 "NONE"
 	{ts = 0;}
 	break;
-#line 279 "/home/aaron/workspace/semblance/src/parser/lexer.c"
+#line 282 "/home/aaron/workspace/semblance/src/parser/lexer.c"
 		}
 	}
 
@@ -295,7 +298,7 @@ _again:
 	_out: {}
 	}
 
-#line 57 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
+#line 60 "/home/aaron/workspace/semblance/src/parser/lexer.rl"
 
   int error = 0;
   if (cs == semblance_lexer_error) {
