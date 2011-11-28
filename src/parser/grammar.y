@@ -48,7 +48,7 @@ parameters ::= arguments.
 parameters ::= .
 
 arguments ::= arguments COMMA expr. { printf("arguments\n"); }
-arguments ::= expr. { printf("arg\n"); }
+arguments(A) ::= expr(E). { printf("Callback: %p %p\n", callbacks->context, callbacks->createArg); A = callbacks->createArg(callbacks->context, E); }
 
 // assign token as object for terminals
 expr(E) ::= HEX(I). { E = I; }

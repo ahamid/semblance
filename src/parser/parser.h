@@ -4,7 +4,8 @@
 #include "token.h"
 
 typedef struct _ParserCallbacks {
-  void (*createArg)(void *, const Token* const tok);
+  void * context;
+  void * (*createArg)(void * context, const Token* const tok);
 } ParserCallbacks;
 
 int parse(const char * const source, const ParserCallbacks * const);

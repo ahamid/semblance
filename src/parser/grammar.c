@@ -712,7 +712,7 @@ static void yy_reduce(
         break;
       case 10: /* arguments ::= expr */
 #line 51 "/home/aaron/workspace/semblance/src/parser/grammar.y"
-{ printf("arg\n"); }
+{ printf("Callback: %p %p\n", callbacks->context, callbacks->createArg); yygotominor.yy0 = callbacks->createArg(callbacks->context, yymsp[0].minor.yy0); }
 #line 717 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       case 11: /* expr ::= HEX */

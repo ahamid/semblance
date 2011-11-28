@@ -1,19 +1,14 @@
 #ifndef token_h
 #define token_h
 
-typedef enum _TokenType {
-  IDENTIFIER,
-  DIRECTIVE_START
-} TokenType;
-
 #define MAX_VALUE_SIZE 2047
 
 typedef struct _Token {
-  TokenType type;
+  int type;
   char value[MAX_VALUE_SIZE + 1];
 } Token;
 
-Token* token_create(TokenType type, const char * const start, const char * const end);
+Token* token_create(int type, const char * const start, const char * const end);
 void token_free(Token* token);
 
 #endif
