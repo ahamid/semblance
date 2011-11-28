@@ -1,5 +1,5 @@
 import elf
-import SimpleParser
+import parser/SimpleParser
 import structs/ArrayList
 import ProgramObject
 import Statement
