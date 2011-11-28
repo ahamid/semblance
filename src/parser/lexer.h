@@ -3,7 +3,8 @@
 
 #include "token.h"
 
-#define IDENT() Parse(pParser, TK_IDENT, token_create(IDENTIFIER, ts, te))
-#define DIRECTIVE_START() Parse(pParser, TK_DIRECTIVE_START, token_create(DIRECTIVE_START, ts, te)) 
+#define TK(I) (token_create(I, ts, te)) 
+#define EMIT(T) Parse(pParser, TK_##T, TK(TK_##T), callbacks)
+#define EMIT_BLANK(T) Parse(pParser, TK_##T, token_create(TK_##T, NULL, NULL), callbacks)
 
 #endif

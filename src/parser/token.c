@@ -5,17 +5,19 @@
 #include <errno.h>
 
 Token* token_create(TokenType type, const char * const start, const char * const end) {
+    printf("Creating token: type: %i, start: %p, end: %p\n", type, start, end);
     Token *tk = calloc(1, sizeof(Token));
     tk->type = type;
     int value_size = end - start;
     int min = value_size < MAX_VALUE_SIZE ? value_size : MAX_VALUE_SIZE;
     strncpy(tk->value, start, min);
     tk->value[MAX_VALUE_SIZE] = '\0';
-    printf("Creating token: %s\n", tk->value);
+    printf("Created token: type: %i, value: %s\n", tk->type, tk->value);
     return tk;
 }
 
 void token_free(Token* token) {
-  printf("Freeing token: %s\n", token->value);
+  if (token == NULL) return;
+  printf("Freeing token: type: %i, value: %s\n", token->type, token->value);
   free(token);
 }

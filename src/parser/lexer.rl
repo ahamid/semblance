@@ -1,5 +1,6 @@
 #include "grammar.h"
 #include "lexer.h"
+#include "parser.h"
 // lemon doesn't provide prototypes for parser API, brute force include here
 // and let the compiler sort it out
 #include "grammar.c"
@@ -16,25 +17,31 @@
   }
   action newline {
     lineno++;
+    EMIT(EOL);
   }
+
+  newline = '\n' @newline;
+
+  directive_start = '!' when starts_line;
 
   alnum_u = alnum | '_';
   alpha_u = alpha | '_';
   identifier = alpha_u alnum_u*;
-  register = '%' identifier;
-  #directive = '!' identifier when starts_line;
-  directive_start = '!' when starts_line;
-  comma = ',';
-  newline = '\n' @newline;
 
   main := |*
-    identifier { print_match("identifier", lineno, ts, te); IDENT(); };
-    directive_start  { print_match("directive", lineno, ts, te); DIRECTIVE_START(); };
-    newline;
-    comma;
+    directive_start { PRINT_MATCH("directive_start"); EMIT(DIRECTIVE_START); };
+    identifier      { PRINT_MATCH("identifier"); EMIT(IDENT); };
     space;
+    newline;
+    ',' { PRINT_MATCH("COMMA"); EMIT(COMMA); };
+    '-'? digit+ { EMIT(INT); };
+    '-'? digit+ '.' digit+ { EMIT(FLOAT); };
+    '0x' xdigit+ { EMIT(HEX); };
   *|;
+
 }%%
+
+#define PRINT_MATCH(T) print_match(T, lineno, ts, te)
 
 static void print_match(const char const * type, int line, const char const * start, const char const * end) {
   printf("line %i, type %s, len: %i: '%.*s'\n", line, type, end - start, end - start, start);
@@ -42,7 +49,7 @@ static void print_match(const char const * type, int line, const char const * st
 
 %% write data;
 
-int parse(const char * const source) {
+int parse(const char * const source, const ParserCallbacks * const callbacks) {
   int cs, act, lineno = 0;
   const char *ts = 0, *te = 0;
 
@@ -63,7 +70,10 @@ int parse(const char * const source) {
     printf("invalid character '%c'\n", ts[0]);
     error = 1;
   } else {
-    Parse(pParser, 0, NULL);
+    printf("emitting synthetic eol\n");
+    EMIT_BLANK(EOL);
+    printf("final parse\n");
+    Parse(pParser, 0, NULL, callbacks);
   }
 
   ParseFree(pParser, free);

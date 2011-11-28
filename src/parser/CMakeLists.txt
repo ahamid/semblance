@@ -11,6 +11,7 @@ add_custom_command (
   OUTPUT ${LEXER_C}
   COMMAND ${RAGEL} -o ${LEXER_C} ${CMAKE_CURRENT_SOURCE_DIR}/lexer.rl
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/lexer.rl # build when lexer.rl is newer
+  DEPENDS ${GRAMMAR_C}
 ) 
 
 add_custom_command(

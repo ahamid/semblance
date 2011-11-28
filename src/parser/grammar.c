@@ -8,8 +8,9 @@
 
   #include "SemblanceConfig.h"
   #include "token.h"
+  #include "parser.h"
   #include <string.h>
-#line 13 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 14 "/home/aaron/workspace/semblance/src/parser/grammar.c"
 /* Next is all token values, in a form suitable for use by makeheaders.
 ** This section will be null unless lemon is run with the -m switch.
 */
@@ -60,7 +61,7 @@
 **                       defined, then do no error processing.
 */
 #define YYCODETYPE unsigned char
-#define YYNOCODE 10
+#define YYNOCODE 19
 #define YYACTIONTYPE unsigned char
 #define ParseTOKENTYPE  Token* 
 typedef union {
@@ -70,12 +71,12 @@ typedef union {
 #ifndef YYSTACKDEPTH
 #define YYSTACKDEPTH 100
 #endif
-#define ParseARG_SDECL
-#define ParseARG_PDECL
-#define ParseARG_FETCH
-#define ParseARG_STORE
-#define YYNSTATE 8
-#define YYNRULE 7
+#define ParseARG_SDECL  const ParserCallbacks * callbacks ;
+#define ParseARG_PDECL , const ParserCallbacks * callbacks 
+#define ParseARG_FETCH  const ParserCallbacks * callbacks  = yypParser->callbacks 
+#define ParseARG_STORE yypParser->callbacks  = callbacks 
+#define YYNSTATE 20
+#define YYNRULE 17
 #define YY_NO_ACTION      (YYNSTATE+YYNRULE+2)
 #define YY_ACCEPT_ACTION  (YYNSTATE+YYNRULE+1)
 #define YY_ERROR_ACTION   (YYNSTATE+YYNRULE)
@@ -144,31 +145,34 @@ static const YYMINORTYPE yyzerominor = { 0 };
 **                     shifting non-terminals after a reduce.
 **  yy_default[]       Default action for each state.
 */
-#define YY_ACTTAB_COUNT (11)
+#define YY_ACTTAB_COUNT (21)
 static const YYACTIONTYPE yy_action[] = {
- /*     0 */     8,    4,    6,    2,    5,   16,    1,    3,   17,   17,
- /*    10 */     7,
+ /*     0 */    13,   38,    3,   16,   15,   14,    7,    6,   12,    8,
+ /*    10 */     2,   19,   10,    1,   11,   20,   18,   17,    4,    9,
+ /*    20 */     5,
 };
 static const YYCODETYPE yy_lookahead[] = {
- /*     0 */     0,    2,    2,    6,    7,    4,    5,    1,    9,    9,
- /*    10 */     8,
+ /*     0 */     2,    9,   10,    5,    6,    7,   15,   16,   17,   12,
+ /*    10 */    11,   14,   13,    2,    3,    0,    3,   17,    4,    2,
+ /*    20 */     1,
 };
-#define YY_SHIFT_USE_DFLT (-2)
-#define YY_SHIFT_COUNT (3)
-#define YY_SHIFT_MIN   (-1)
-#define YY_SHIFT_MAX   (6)
+#define YY_SHIFT_USE_DFLT (-3)
+#define YY_SHIFT_COUNT (8)
+#define YY_SHIFT_MIN   (-2)
+#define YY_SHIFT_MAX   (19)
 static const signed char yy_shift_ofst[] = {
- /*     0 */    -2,    6,    0,   -1,
+ /*     0 */    -3,   -2,   11,   19,   -2,   17,   14,   13,   15,
 };
-#define YY_REDUCE_USE_DFLT (-4)
-#define YY_REDUCE_COUNT (2)
-#define YY_REDUCE_MIN   (-3)
-#define YY_REDUCE_MAX   (2)
+#define YY_REDUCE_USE_DFLT (-10)
+#define YY_REDUCE_COUNT (4)
+#define YY_REDUCE_MIN   (-9)
+#define YY_REDUCE_MAX   (0)
 static const signed char yy_reduce_ofst[] = {
- /*     0 */     1,   -3,    2,
+ /*     0 */    -8,   -9,   -3,   -1,    0,
 };
 static const YYACTIONTYPE yy_default[] = {
- /*     0 */    10,   13,   15,   15,   11,    9,   14,   12,
+ /*     0 */    22,   28,   36,   25,   37,   37,   27,   37,   37,   23,
+ /*    10 */    21,   35,   30,   34,   33,   32,   31,   29,   26,   24,
 };
 
 /* The next table maps tokens into fallback tokens.  If a construct
@@ -261,9 +265,11 @@ void ParseTrace(FILE *TraceFILE, char *zTracePrompt){
 /* For tracing shifts, the names of all terminals and nonterminals
 ** are required.  The following table supplies these names */
 static const char *const yyTokenName[] = { 
-  "$",             "DIRECTIVE_START",  "IDENT",         "error",       
-  "module",        "directives",    "statements",    "directive",   
-  "statement",   
+  "$",             "DIRECTIVE_START",  "IDENT",         "EOL",         
+  "COMMA",         "HEX",           "INT",           "FLOAT",       
+  "error",         "module",        "directives",    "operations",  
+  "end",           "directive",     "operation",     "parameters",  
+  "arguments",     "expr",        
 };
 #endif /* NDEBUG */
 
@@ -271,13 +277,23 @@ static const char *const yyTokenName[] = {
 /* For tracing reduce actions, the names of all rules are required.
 */
 static const char *const yyRuleName[] = {
- /*   0 */ "module ::= directives statements",
+ /*   0 */ "module ::= directives operations end",
  /*   1 */ "directives ::= directives directive",
  /*   2 */ "directives ::=",
  /*   3 */ "directive ::= DIRECTIVE_START IDENT",
- /*   4 */ "statements ::= statements statement",
- /*   5 */ "statements ::=",
- /*   6 */ "statement ::= IDENT",
+ /*   4 */ "operations ::= operations operation",
+ /*   5 */ "operations ::=",
+ /*   6 */ "operation ::= IDENT parameters EOL",
+ /*   7 */ "parameters ::= arguments",
+ /*   8 */ "parameters ::=",
+ /*   9 */ "arguments ::= arguments COMMA expr",
+ /*  10 */ "arguments ::= expr",
+ /*  11 */ "expr ::= HEX",
+ /*  12 */ "expr ::= INT",
+ /*  13 */ "expr ::= FLOAT",
+ /*  14 */ "expr ::= IDENT",
+ /*  15 */ "end ::= EOL",
+ /*  16 */ "end ::=",
 };
 #endif /* NDEBUG */
 
@@ -359,10 +375,15 @@ static void yy_destructor(
       /* TERMINAL Destructor */
     case 1: /* DIRECTIVE_START */
     case 2: /* IDENT */
+    case 3: /* EOL */
+    case 4: /* COMMA */
+    case 5: /* HEX */
+    case 6: /* INT */
+    case 7: /* FLOAT */
 {
-#line 8 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 9 "/home/aaron/workspace/semblance/src/parser/grammar.y"
  token_free((yypminor->yy0)); 
-#line 366 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 387 "/home/aaron/workspace/semblance/src/parser/grammar.c"
 }
       break;
     default:  break;   /* If no destructor action specified: do nothing */
@@ -600,13 +621,23 @@ static const struct {
   YYCODETYPE lhs;         /* Symbol on the left-hand side of the rule */
   unsigned char nrhs;     /* Number of right-hand side symbols in the rule */
 } yyRuleInfo[] = {
-  { 4, 2 },
-  { 5, 2 },
-  { 5, 0 },
-  { 7, 2 },
-  { 6, 2 },
-  { 6, 0 },
-  { 8, 1 },
+  { 9, 3 },
+  { 10, 2 },
+  { 10, 0 },
+  { 13, 2 },
+  { 11, 2 },
+  { 11, 0 },
+  { 14, 3 },
+  { 15, 1 },
+  { 15, 0 },
+  { 16, 3 },
+  { 16, 1 },
+  { 17, 1 },
+  { 17, 1 },
+  { 17, 1 },
+  { 17, 1 },
+  { 12, 1 },
+  { 12, 0 },
 };
 
 static void yy_accept(yyParser*);  /* Forward Declaration */
@@ -662,22 +693,52 @@ static void yy_reduce(
   **     break;
   */
       case 3: /* directive ::= DIRECTIVE_START IDENT */
-#line 38 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 40 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 { printf("directive: %s\n", yymsp[0].minor.yy0->value); token_free(yymsp[0].minor.yy0);   yy_destructor(yypParser,1,&yymsp[-1].minor);
 }
-#line 669 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 700 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
-      case 6: /* statement ::= IDENT */
-#line 43 "/home/aaron/workspace/semblance/src/parser/grammar.y"
-{ printf("statement: %s\n", yymsp[0].minor.yy0->value); token_free(yymsp[0].minor.yy0); }
-#line 674 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+      case 6: /* operation ::= IDENT parameters EOL */
+#line 45 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("operation: %s\n", yymsp[-2].minor.yy0->value); token_free(yymsp[-2].minor.yy0);   yy_destructor(yypParser,3,&yymsp[0].minor);
+}
+#line 706 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+        break;
+      case 9: /* arguments ::= arguments COMMA expr */
+#line 50 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("arguments\n");   yy_destructor(yypParser,4,&yymsp[-1].minor);
+}
+#line 712 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+        break;
+      case 10: /* arguments ::= expr */
+#line 51 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ printf("arg\n"); }
+#line 717 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+        break;
+      case 11: /* expr ::= HEX */
+      case 12: /* expr ::= INT */ yytestcase(yyruleno==12);
+      case 13: /* expr ::= FLOAT */ yytestcase(yyruleno==13);
+      case 14: /* expr ::= IDENT */ yytestcase(yyruleno==14);
+#line 54 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{ yygotominor.yy0 = yymsp[0].minor.yy0; }
+#line 725 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+        break;
+      case 15: /* end ::= EOL */
+#line 59 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+{
+  yy_destructor(yypParser,3,&yymsp[0].minor);
+}
+#line 732 "/home/aaron/workspace/semblance/src/parser/grammar.c"
         break;
       default:
-      /* (0) module ::= directives statements */ yytestcase(yyruleno==0);
+      /* (0) module ::= directives operations end */ yytestcase(yyruleno==0);
       /* (1) directives ::= directives directive */ yytestcase(yyruleno==1);
       /* (2) directives ::= */ yytestcase(yyruleno==2);
-      /* (4) statements ::= statements statement */ yytestcase(yyruleno==4);
-      /* (5) statements ::= */ yytestcase(yyruleno==5);
+      /* (4) operations ::= operations operation */ yytestcase(yyruleno==4);
+      /* (5) operations ::= */ yytestcase(yyruleno==5);
+      /* (7) parameters ::= arguments */ yytestcase(yyruleno==7);
+      /* (8) parameters ::= */ yytestcase(yyruleno==8);
+      /* (16) end ::= */ yytestcase(yyruleno==16);
         break;
   };
   yygoto = yyRuleInfo[yyruleno].lhs;
@@ -723,10 +784,10 @@ static void yy_parse_failed(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser fails */
-#line 16 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 18 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   fprintf(stderr, "Parsing failed.\n");
-#line 730 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 791 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 #endif /* YYNOERRORRECOVERY */
@@ -741,7 +802,7 @@ static void yy_syntax_error(
 ){
   ParseARG_FETCH;
 #define TOKEN (yyminor.yy0)
-#line 20 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 22 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   printf("error at token %s\n", yyTokenName[yymajor]);
 
@@ -751,9 +812,9 @@ static void yy_syntax_error(
 
   printf(" | %s ] unexpected '%.*s'\n",
          yyTokenName[yymajor],
-         yymajor != 0 ? strlen(TOKEN->value) : 7, 
-         yymajor != 0 ? TOKEN->value : "$ (EOF)");
-#line 757 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+         (yymajor != 0 && TOKEN != NULL) ? strlen(TOKEN->value) : 7, 
+         (yymajor != 0 && TOKEN != NULL) ? TOKEN->value : "$ (EOF)");
+#line 818 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
@@ -772,10 +833,10 @@ static void yy_accept(
   while( yypParser->yyidx>=0 ) yy_pop_parser_stack(yypParser);
   /* Here code is inserted which will be executed whenever the
   ** parser accepts */
-#line 12 "/home/aaron/workspace/semblance/src/parser/grammar.y"
+#line 14 "/home/aaron/workspace/semblance/src/parser/grammar.y"
 
   printf("Parsing complete.\n");
-#line 779 "/home/aaron/workspace/semblance/src/parser/grammar.c"
+#line 840 "/home/aaron/workspace/semblance/src/parser/grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
