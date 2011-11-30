@@ -17,6 +17,7 @@ include_directories("${PROJECT_BINARY_DIR}/src/config")
  
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/parser")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ooc")
+add_subdirectory("${PROJECT_SOURCE_DIR}/tests")
 
 # add the executable
 #add_executable(Semblance semblance.cxx)

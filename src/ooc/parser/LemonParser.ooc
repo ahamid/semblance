@@ -9,6 +9,7 @@ import RegisterData
 import io/File
 import structs/ArrayList
 import lang/Memory
+import Argument
 
 LemonParser: class extends Parser {
   parse: func(fileName: String) -> ProgramObject {
@@ -26,9 +27,9 @@ LemonParser: class extends Parser {
   }
 
   createArgCallback: func(token: TokenStruct@) -> Pointer {
-    "IN CALLBACK" println()
-    printf("%s\n", token value)
+    // todo: get data from ISA. need ISA member.
+    "ooc: createArgCallback" println()
     (token value as String) println()
-    return null
+    return Argument new(token value as String, RegisterData new(token value as String, 1))
   }
 }
