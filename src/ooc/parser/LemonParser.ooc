@@ -10,6 +10,7 @@ import io/File
 import structs/ArrayList
 import lang/Memory
 import Argument
+import ParserAPI
 
 LemonParser: class extends Parser {
   parse: func(fileName: String) -> ProgramObject {
